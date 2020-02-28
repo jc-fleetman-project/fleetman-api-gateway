@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: api-gateway
-        image: ${REPOSITORY_TAG}
+        image: jc87/fleetman-api-gateway:12
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: production-microservice
