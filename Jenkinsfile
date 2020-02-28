@@ -54,7 +54,7 @@ pipeline {
       stage('Deploy to Cluster') {
           steps {
             // ersetzt die Umgebungsvariable REPOSITORY_TAG im Kubernetes Deployment
-            sh "sed -i -e 's/${REPOSITORY_TAG}/'+${REPOSITORY_TAG}+'/g' hello.txt"
+            sh "sed -i 's/<<REPOSITORY_TAG>>/${REPOSITORY_TAG}/g' ${env.MANIFEST}"
 
             // Führt das Deployment aus
             step([
