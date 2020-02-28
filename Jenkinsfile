@@ -11,6 +11,13 @@ pipeline {
      // dockerhub Zugangsdaten
      DOCKERHUB_CREDENTIALS = 'dockerhub'
      dockerImage = ''
+
+     // GCE
+     PROJECT_ID = 'capable-arbor-268514'
+     CLUSTER_NAME = 'cluster-1'
+     LOCATION = 'us-central1-a'
+     MANIFEST = 'deploy.yaml'
+     CREDENTIALS_ID = 'gke'
    }
 
    stages {
@@ -44,18 +51,26 @@ pipeline {
         }
       }
 
+      stage('Deploy to Cluster') {
+          steps {
+            // ersetzt die Umgebungsvariable REPOSITORY_TAG im Kubernetes Deployment
+            sh 'envsubst < ${WORKSPACE}/deploy.yaml'
+            // Führt das Deployment aus
+            step([
+              $class: 'KubernetesEngineBuilder',
+              projectId: env.PROJECT_ID,
+              clusterName: env.CLUSTER_NAME,
+              location: env.LOCATION,
+              manifestPattern: env.MANIFEST,
+              credentialsId: env.CREDENTIALS_ID,
+              verifyDeployments: true])
+          }
+      }
+
       stage('Remove Unused docker image') {
         steps{
           sh "docker rmi $REPOSITORY_TAG"
         }
       }
-
-
-
-//      stage('Deploy to Cluster') {
-//          steps {
-//                    sh 'envsubst < ${WORKSPACE}/deploy.yaml | kubectl apply -f -'
-//          }
-//      }
    }
 }
