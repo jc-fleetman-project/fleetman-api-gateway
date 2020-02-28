@@ -2,10 +2,14 @@ pipeline {
    agent any
 
    environment {
-     // You must set the following environment variables
+     // Name des Service
      SERVICE_NAME = "fleetman-api-gateway"
+
+     // Tag für Docker, bestehend aus Repository Name und Tag des Image
      REPOSITORY_TAG ="${YOUR_DOCKERHUB_USERNAME}/${SERVICE_NAME}:${BUILD_ID}"
 
+     // dockerhub Zugangsdaten
+     DOCKERHUB_CREDENTIALS = 'dockerhub'
      dockerImage = ''
    }
 
@@ -22,16 +26,19 @@ pipeline {
          }
       }
 
-//      stage('Build Image') {
-//        steps {
-//           sh 'docker image build -t ${REPOSITORY_TAG} .'
-//         }
-//      }
-
       stage('Build Image') {
         steps{
           script {
             dockerImage = docker.build "$REPOSITORY_TAG"
+          }
+        }
+      }
+
+      stage('Push Image') {
+        steps{
+          script {
+            docker.withRegistry( '', DOCKERHUB_CREDENTIALS ) {
+            dockerImage.push()
           }
         }
       }
