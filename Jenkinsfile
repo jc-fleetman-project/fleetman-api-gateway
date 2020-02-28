@@ -54,7 +54,9 @@ pipeline {
       stage('Deploy to Cluster') {
           steps {
             // ersetzt die Umgebungsvariable REPOSITORY_TAG im Kubernetes Deployment
-            sh "sed -i 's/REPOSITORY_TAG/${REPOSITORY_TAG}/g' ${env.MANIFEST}"
+            sh "sed -i 's/<<YOUR_DOCKERHUB_USERNAME>>/${YOUR_DOCKERHUB_USERNAME}/g' ${env.MANIFEST}"
+            sh "sed -i 's/<<SERVICE_NAME>>/${SERVICE_NAME}/g' ${env.MANIFEST}"
+            sh "sed -i 's/<<BUILD_ID>>/${BUILD_ID}/g' ${env.MANIFEST}"
 
             // Führt das Deployment aus
             step([

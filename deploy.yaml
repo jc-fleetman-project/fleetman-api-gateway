@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: api-gateway
-        image: REPOSITORY_TAG
+        image: <<YOUR_DOCKERHUB_USERNAME>>/<<SERVICE_NAME>>:<<BUILD_ID>>
         env:
         - name: SPRING_PROFILES_ACTIVE
           value: production-microservice
