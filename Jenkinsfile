@@ -54,7 +54,8 @@ pipeline {
       stage('Deploy to Cluster') {
           steps {
             // ersetzt die Umgebungsvariable REPOSITORY_TAG im Kubernetes Deployment
-            sh 'envsubst ''${REPOSITORY_TAG}'' < ${WORKSPACE}/deploy.yaml'
+            sh 'envsubst '${REPOSITORY_TAG}' < ${WORKSPACE}/deploy.yaml'
+
             // Führt das Deployment aus
             step([
               $class: 'KubernetesEngineBuilder',
